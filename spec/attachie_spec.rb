@@ -2,9 +2,9 @@
 require File.expand_path("../spec_helper", __FILE__)
 
 class TestModel
-  include Attachments
+  include Attachie
 
-  attachment :file, driver: Attachments::FakeDriver.new, bucket: "bucket", host: "www.example.com", versions: {
+  attachment :file, driver: Attachie::FakeDriver.new, bucket: "bucket", host: "www.example.com", versions: {
     small: { path: "path/to/small/:filename", attribute: "value" },
     large: { path: "path/to/large/:filename" }
   }

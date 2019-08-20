@@ -2,7 +2,7 @@
 require "aws-sdk-s3"
 require "mime-types"
 
-module Attachments
+module Attachie
   class S3MultipartUpload
     include MonitorMixin
 

@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'attachments/version'
+require 'attachie/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "attachments"
-  spec.version       = Attachments::VERSION
+  spec.name          = "attachie"
+  spec.version       = Attachie::VERSION
   spec.authors       = ["Benjamin Vetter"]
   spec.email         = ["vetter@plainpicture.de"]
   spec.summary       = %q{Declarative and flexible attachments}

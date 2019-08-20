@@ -1,7 +1,7 @@
 
 require "fileutils"
 
-module Attachments
+module Attachie
   class FileDriver
     class FileMultipartUpload
       include MonitorMixin

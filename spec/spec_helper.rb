@@ -1,12 +1,12 @@
 
-require File.expand_path("../../lib/attachments", __FILE__)
+require File.expand_path("../../lib/attachie", __FILE__)
 
-require "attachments/file_driver"
-require "attachments/fake_driver"
-require "attachments/s3_driver"
+require "attachie/file_driver"
+require "attachie/fake_driver"
+require "attachie/s3_driver"
 
 class Product
-  include Attachments
+  include Attachie
 
   attr_accessor :id
 
@@ -16,7 +16,7 @@ class Product
     end
   end
 
-  attachment :image, host: ":subdomain.example.com", path_prefix: ":bucket", bucket: "images", driver: Attachments::FileDriver.new("/tmp/attachments"), versions: {
+  attachment :image, host: ":subdomain.example.com", path_prefix: ":bucket", bucket: "images", driver: Attachie::FileDriver.new("/tmp/attachie"), versions: {
     thumbnail: { path: "products/:id/thumbnail.jpg" },
     original: { path: "products/:id/original.jpg" }
   }

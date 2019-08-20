@@ -1,6 +1,6 @@
-# Attachments
+# Attachie
 
-[![Build Status](https://secure.travis-ci.org/mrkamel/attachments.png?branch=master)](http://travis-ci.org/mrkamel/attachments)
+[![Build Status](https://secure.travis-ci.org/mrkamel/attachie.png?branch=master)](http://travis-ci.org/mrkamel/attachie)
 
 Declarative and flexible attachments.
 
@@ -9,7 +9,7 @@ Declarative and flexible attachments.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'attachments'
+gem 'attachie'
 ```
 
 And then execute:
@@ -18,15 +18,15 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install attachments
+    $ gem install attachie
 
 ## Usage
 
-First, `include Attachments` and specify an attachment:
+First, `include Attachie` and specify an attachment:
 
 ```ruby
 class User
-  include Attachments
+  include Attachie
 
   attachment :avatar, versions: {
     icon: { path: "users/:id/avatar/icon.jpg" },
@@ -71,22 +71,22 @@ user.avatar(:icon).temp_url(expires_in: 2.days) # Must be supported by the drive
 
 ## Drivers
 
-The `attachments` gem ships with the following drivers:
+The `attachie` gem ships with the following drivers:
 
-* `Attachments::FileDriver`: To store files on the local file system
-* `Attachments::FakeDriver`: To store files in memory (for testing)
-* `Attachments::S3Driver`: To store files on S3
-* `Attachments::SwiftDriver`: To store files on an Openstack Swift provider
+* `Attachie::FileDriver`: To store files on the local file system
+* `Attachie::FakeDriver`: To store files in memory (for testing)
+* `Attachie::S3Driver`: To store files on S3
+* `Attachie::SwiftDriver`: To store files on an Openstack Swift provider
 
 You can eg use the file system driver:
 
 ```ruby
-require "attachments/file_driver"
+require "attachie/file_driver"
 
-Attachments.default_options[:driver] = Attachment::FileDriver.new("/path/to/attachments")
+Attachie.default_options[:driver] = Attachie::FileDriver.new("/path/to/attachments")
 
 class User
-  include Attachments
+  include Attachie
 
   attachment :avatar, host: "www.example.com", versions: {
     # ...
@@ -96,7 +96,7 @@ end
 
 ## Contributing
 
-1. Fork it ( https://github.com/mrkamel/attachments/fork )
+1. Fork it ( https://github.com/mrkamel/attachie/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

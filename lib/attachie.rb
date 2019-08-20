@@ -1,9 +1,9 @@
 
-require "attachments/version"
-require "attachments/interpolation"
+require "attachie/version"
+require "attachie/interpolation"
 require "active_support/all"
 
-module Attachments
+module Attachie
   class UnknownAttachment < StandardError; end
   class NoSuchVersion < StandardError; end
   class InterpolationError < StandardError; end
@@ -91,7 +91,7 @@ module Attachments
         return options[option_name] if options.key?(option_name)
         return attachment.options[option_name] if attachment.options.key?(option_name)
 
-        Attachments.default_options[option_name]
+        Attachie.default_options[option_name]
       end
 
       def interpolate(str)

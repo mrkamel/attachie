@@ -1,8 +1,8 @@
 
 require File.expand_path("../../spec_helper", __FILE__)
 
-RSpec.describe Attachments::FakeDriver do
-  let(:driver) { Attachments::FakeDriver.new }
+RSpec.describe Attachie::FakeDriver do
+  let(:driver) { Attachie::FakeDriver.new }
 
   it "should list objects" do
     begin

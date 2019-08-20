@@ -1,5 +1,5 @@
 
-module Attachments
+module Attachie
   class Interpolation
     attr_accessor :version
 

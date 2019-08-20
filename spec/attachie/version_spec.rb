@@ -1,7 +1,7 @@
 
 require File.expand_path("../../spec_helper", __FILE__)
 
-RSpec.describe Attachments::Attachment::Version do
+RSpec.describe Attachie::Attachment::Version do
   it "should interpolate the host, path_prefix and path" do
     expect(Product.new(id: 1).image(:thumbnail).url).to eq("http://images.example.com/images/products/1/thumbnail.jpg")
   end

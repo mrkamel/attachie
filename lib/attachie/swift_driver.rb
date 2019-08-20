@@ -2,7 +2,7 @@
 require "swift_client"
 require "connection_pool"
 
-module Attachments
+module Attachie
   class SwiftDriver
     attr_accessor :swift_client_pool
 
