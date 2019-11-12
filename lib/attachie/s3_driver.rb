@@ -59,6 +59,12 @@ module Attachie
       self.s3_resource = Aws::S3::Resource.new(client: s3_client)
     end
 
+    def presigned_post(name, bucket, options = {})
+      res = s3_resource.bucket(bucket).object(name).presigned_post(options)
+
+      return { fields: res.fields, headers: {}, method: "post", url: res.url }
+    end
+
     def list(bucket, prefix: nil)
       return enum_for(:list, bucket, prefix: prefix) unless block_given?
 

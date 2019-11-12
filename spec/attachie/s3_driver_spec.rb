@@ -11,59 +11,93 @@ RSpec.describe Attachie::S3Driver do
     ))
   end
 
-  it "should list objects" do
-    begin
-      driver.store("object1", "blob", "bucket")
-      driver.store("object2", "blob", "bucket")
-      driver.store("other", "blob", "bucket")
+  describe "#list" do
+    it "should list objects" do
+      begin
+        driver.store("object1", "blob", "bucket")
+        driver.store("object2", "blob", "bucket")
+        driver.store("other", "blob", "bucket")
 
-      expect(driver.list("bucket", prefix: "object").to_a).to eq(["object1", "object2"])
-    ensure
-      driver.delete("object1", "bucket")
-      driver.delete("object2", "bucket")
-      driver.delete("other", "bucket")
-    end
-  end
-
-  it "should store a blob" do
-    begin
-      driver.store("name", "blob", "bucket")
-
-      expect(driver.exists?("name", "bucket")).to be(true)
-      expect(driver.value("name", "bucket")).to eq("blob")
-    ensure
-      driver.delete("name", "bucket")
-    end
-  end
-
-  it "should store a blob via multipart upload" do
-    begin
-      driver.store_multipart("name", "bucket") do |upload|
-        upload.upload_part("chunk1")
-        upload.upload_part("chunk2")
+        expect(driver.list("bucket", prefix: "object").to_a).to eq(["object1", "object2"])
+      ensure
+        driver.delete("object1", "bucket")
+        driver.delete("object2", "bucket")
+        driver.delete("other", "bucket")
       end
-
-      expect(driver.exists?("name", "bucket")).to be(true)
-      expect(driver.value("name", "bucket")).to eq("chunk1chunk2")
-    ensure
-      driver.delete("name", "bucket")
     end
   end
 
-  it "should delete a blob" do
-    begin
-      driver.store("name", "blob", "bucket")
-      expect(driver.exists?("name", "bucket")).to be(true)
+  describe "#store" do
+    it "should store a blob" do
+      begin
+        driver.store("name", "blob", "bucket")
 
-      driver.delete("name", "bucket")
-      expect(driver.exists?("name", "bucket")).to be(false)
-    ensure
-      driver.delete("name", "bucket")
+        expect(driver.exists?("name", "bucket")).to be(true)
+        expect(driver.value("name", "bucket")).to eq("blob")
+      ensure
+        driver.delete("name", "bucket")
+      end
     end
   end
 
-  it "should generate a temp_url" do
-    expect(driver.temp_url("name", "bucket")).to be_url
+  describe "#store_multipart" do
+    it "should store a blob via multipart upload" do
+      begin
+        driver.store_multipart("name", "bucket") do |upload|
+          upload.upload_part("chunk1")
+          upload.upload_part("chunk2")
+        end
+
+        expect(driver.exists?("name", "bucket")).to be(true)
+        expect(driver.value("name", "bucket")).to eq("chunk1chunk2")
+      ensure
+        driver.delete("name", "bucket")
+      end
+    end
+  end
+
+  describe "#delete" do
+    it "should delete a blob" do
+      begin
+        driver.store("name", "blob", "bucket")
+        expect(driver.exists?("name", "bucket")).to be(true)
+
+        driver.delete("name", "bucket")
+        expect(driver.exists?("name", "bucket")).to be(false)
+      ensure
+        driver.delete("name", "bucket")
+      end
+    end
+  end
+
+  describe "#temp_url" do
+    it "should generate a temp_url" do
+      expect(driver.temp_url("name", "bucket")).to be_url
+    end
+  end
+
+  describe ".presigned_post" do
+    it "generates a presign response" do
+      expect(driver.presigned_post("path/to/object", "bucket")).to match(
+        fields: hash_including("key" => "path/to/object"),
+        headers: {},
+        method: "post",
+        url: "http://bucket.localhost:4569"
+      )
+    end
+
+    it "supports and passes additional options" do
+      bucket = double
+      object = double
+
+      allow(bucket).to receive(:object).and_return(object)
+      allow(object).to receive(:presigned_post).and_return(OpenStruct.new)
+      allow(driver.s3_resource).to receive(:bucket).and_return(bucket)
+
+      driver.presigned_post("path", "bucket", { key: "value" })
+
+      expect(object).to have_received(:presigned_post).with(hash_including(key: "value"))
+    end
   end
 end
 

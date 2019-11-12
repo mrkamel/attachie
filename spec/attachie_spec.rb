@@ -29,7 +29,7 @@ RSpec.describe TestModel do
     expect(test_model.file(:small).attribute).to eq("value")
   end
 
-  it "should espect the host" do
+  it "should respect the host" do
     test_model = TestModel.new(filename: "file.jpg")
 
     expect(test_model.file(:large).url).to eq("http://www.example.com/path/to/large/file.jpg")
