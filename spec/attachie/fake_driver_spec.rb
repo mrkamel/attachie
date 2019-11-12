@@ -6,6 +6,12 @@ RSpec.describe Attachie::FakeDriver do
 
   after { driver.flush }
 
+  describe "#presigned_post" do
+    it "raises NotSupported" do
+      expect { driver.presigned_post("path", "bucket") }.to raise_error(Attachie::NotSupported)
+    end
+  end
+
   describe "#list" do
     it "lists objects" do
       driver.store("object1", "blob", "bucket1")

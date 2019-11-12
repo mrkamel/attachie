@@ -7,6 +7,7 @@ module Attachie
   class UnknownAttachment < StandardError; end
   class NoSuchVersion < StandardError; end
   class InterpolationError < StandardError; end
+  class NotSupported < StandardError; end
 
   def self.default_options
     @default_options ||= { :protocol => "http" }
@@ -20,6 +21,10 @@ module Attachie
         self.attachment = attachment
         self.name = name
         self.options = options
+      end
+
+      def presigned_post(options = {})
+        option(:driver).presigned_post(path, container, options)
       end
 
       def url
@@ -152,7 +157,7 @@ module Attachie
 
     raise(UnknownAttachment) unless definition
 
-    Attachment.new self, name, definition
+    Attachment.new(self, name, definition)
   end
 
   module ClassMethods

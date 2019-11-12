@@ -50,6 +50,10 @@ module Attachie
       }
     end
 
+    def presigned_post(name, bucket, options = {})
+      raise NotSupported, 'presigned_post is not supported in FakeDriver'
+    end
+
     def store(name, data_or_io, bucket, options = {})
       objects(bucket)[name] = data_or_io.respond_to?(:read) ? data_or_io.read : data_or_io
     end 

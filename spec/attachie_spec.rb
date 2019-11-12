@@ -17,32 +17,32 @@ class TestModel
 end
 
 RSpec.describe TestModel do
-  it "should interpolate the path" do
+  it "interpolates the path" do
     test_model = TestModel.new(filename: "file.jpg")
 
     expect(test_model.file(:small).path).to eq("path/to/small/file.jpg")
   end
 
-  it "should allow arbitrary version methods" do
+  it "allows arbitrary version methods" do
     test_model = TestModel.new(filename: "file.jpg")
 
     expect(test_model.file(:small).attribute).to eq("value")
   end
 
-  it "should respect the host" do
+  it "respects the host" do
     test_model = TestModel.new(filename: "file.jpg")
 
     expect(test_model.file(:large).url).to eq("http://www.example.com/path/to/large/file.jpg")
   end
 
-  it "should correctly use the driver" do
+  it "correctly uses the driver" do
     test_model = TestModel.new(filename: "blob.txt")
     test_model.file(:large).store "blob"
 
     expect(test_model.file(:large).value).to eq("blob")
   end
 
-  it "should set updated_at" do
+  it "sets updated_at" do
     test_model = TestModel.new(filename: "file.jpg")
     test_model.file = "file"
 
@@ -54,10 +54,10 @@ RSpec.describe TestModel do
     expect(test_model.updated_at).to be_nil
   end
 
-  describe '#info' do
-    it 'returns info about the attachment' do
+  describe "#info" do
+    it "returns info about the attachment" do
       test_model = TestModel.new(filename: "blob.txt")
-      test_model.file(:large).store "blob"
+      test_model.file(:large).store("blob")
 
       expect(test_model.file(:large).info).to match(
         last_modified: anything,
@@ -66,5 +66,25 @@ RSpec.describe TestModel do
       )
     end
   end
-end
 
+  describe "#presigned_post" do
+    let(:attachment) { TestModel.new(filename: "file.jpg").file(:large) }
+    let(:driver) { TestModel.attachments[:file][:driver] }
+
+    before do
+      allow(driver).to receive(:presigned_post)
+    end
+
+    it "delegates to the driver" do
+      attachment.presigned_post
+
+      expect(driver).to have_received(:presigned_post).with(attachment.path, attachment.bucket, {})
+    end
+
+    it "passes the supplied options" do
+      attachment.presigned_post(key: "value")
+
+      expect(driver).to have_received(:presigned_post).with(attachment.path, attachment.bucket, { key: "value" })
+    end
+  end
+end

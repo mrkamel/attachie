@@ -65,6 +65,10 @@ module Attachie
       true
     end
 
+    def presigned_post(name, bucket, options = {})
+      raise NotSupported, 'presigned_post is not supported in FileDriver'
+    end
+
     def info(name, bucket)
       {
         last_modified: File.mtime(path_for(name, bucket)),

@@ -4,6 +4,12 @@ require File.expand_path("../../spec_helper", __FILE__)
 RSpec.describe Attachie::FileDriver do
   let(:driver) { Attachie::FileDriver.new("/tmp/attachie") }
 
+  describe "#presigned_post" do
+    it "raises NotSupported" do
+      expect { driver.presigned_post("path", "bucket") }.to raise_error(Attachie::NotSupported)
+    end
+  end
+
   describe "#store" do
     it "stores a blob" do
       begin
