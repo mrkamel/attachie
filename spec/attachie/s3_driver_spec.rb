@@ -12,7 +12,7 @@ RSpec.describe Attachie::S3Driver do
   end
 
   describe "#list" do
-    it "should list objects" do
+    it "lists objects" do
       begin
         driver.store("object1", "blob", "bucket")
         driver.store("object2", "blob", "bucket")
@@ -28,7 +28,7 @@ RSpec.describe Attachie::S3Driver do
   end
 
   describe "#store" do
-    it "should store a blob" do
+    it "stores a blob" do
       begin
         driver.store("name", "blob", "bucket")
 
@@ -41,7 +41,7 @@ RSpec.describe Attachie::S3Driver do
   end
 
   describe "#store_multipart" do
-    it "should store a blob via multipart upload" do
+    it "stores a blob via multipart upload" do
       begin
         driver.store_multipart("name", "bucket") do |upload|
           upload.upload_part("chunk1")
@@ -57,7 +57,7 @@ RSpec.describe Attachie::S3Driver do
   end
 
   describe "#delete" do
-    it "should delete a blob" do
+    it "deletes a blob" do
       begin
         driver.store("name", "blob", "bucket")
         expect(driver.exists?("name", "bucket")).to be(true)
@@ -71,12 +71,12 @@ RSpec.describe Attachie::S3Driver do
   end
 
   describe "#temp_url" do
-    it "should generate a temp_url" do
+    it "generates a temp_url" do
       expect(driver.temp_url("name", "bucket")).to be_url
     end
   end
 
-  describe ".presigned_post" do
+  describe "#presigned_post" do
     it "generates a presign response" do
       expect(driver.presigned_post("path/to/object", "bucket")).to match(
         fields: hash_including("key" => "path/to/object"),
@@ -97,6 +97,22 @@ RSpec.describe Attachie::S3Driver do
       driver.presigned_post("path", "bucket", { key: "value" })
 
       expect(object).to have_received(:presigned_post).with(hash_including(key: "value"))
+    end
+  end
+
+  describe "#info" do
+    it "returns info about the object" do
+      begin
+        driver.store("name.txt", "blob", "bucket")
+
+        expect(driver.info("name.txt", "bucket")).to match(
+          content_length: 4,
+          content_type: "text/plain",
+          last_modified: anything
+        )
+      ensure
+        driver.delete("name.txt", "bucket")
+      end
     end
   end
 end

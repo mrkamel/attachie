@@ -54,6 +54,10 @@ module Attachie
         option(:driver).store(path, data_or_io, container, opts)
       end
 
+      def info
+        option(:driver).info(path, container)
+      end
+
       def store_multipart(opts = {}, &block)
         option(:driver).store_multipart(path, container, opts, &block)
       end

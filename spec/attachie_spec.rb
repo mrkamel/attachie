@@ -53,5 +53,18 @@ RSpec.describe TestModel do
 
     expect(test_model.updated_at).to be_nil
   end
+
+  describe '#info' do
+    it 'returns info about the attachment' do
+      test_model = TestModel.new(filename: "blob.txt")
+      test_model.file(:large).store "blob"
+
+      expect(test_model.file(:large).info).to match(
+        last_modified: anything,
+        content_type: anything,
+        content_length: anything
+      )
+    end
+  end
 end
 

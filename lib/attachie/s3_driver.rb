@@ -76,6 +76,16 @@ module Attachie
       end
     end
 
+    def info(name, bucket)
+      object = s3_resource.bucket(bucket).object(name)
+
+      {
+        content_length: object.content_length,
+        last_modified: object.last_modified,
+        content_type: object.content_type
+      }
+    end
+
     def store(name, data_or_io, bucket, options = {})
       opts = options.dup
 

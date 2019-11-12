@@ -65,6 +65,14 @@ module Attachie
       true
     end
 
+    def info(name, bucket)
+      {
+        last_modified: File.mtime(path_for(name, bucket)),
+        content_type: MIME::Types.of(name).first&.to_s,
+        content_length: File.size(path_for(name, bucket))
+      }
+    end
+
     def store_multipart(name, bucket, options = {}, &block)
       path = path_for(name, bucket)
 

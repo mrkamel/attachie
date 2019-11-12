@@ -42,6 +42,14 @@ module Attachie
       end
     end
 
+    def info(name, bucket)
+      {
+        last_modified: nil,
+        content_length: objects(bucket)[name].size,
+        content_type: MIME::Types.of(name).first&.to_s
+      }
+    end
+
     def store(name, data_or_io, bucket, options = {})
       objects(bucket)[name] = data_or_io.respond_to?(:read) ? data_or_io.read : data_or_io
     end 
