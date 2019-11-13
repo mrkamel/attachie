@@ -36,6 +36,9 @@ class User
 end
 ```
 
+Please note, Attachie will interpolate colon prefixed segments like `:id` by
+replacing it with the return value of the respective method.
+
 Second, store blobs for your version:
 
 ```ruby
@@ -71,14 +74,15 @@ user.avatar(:icon).temp_url(expires_in: 2.days) # Must be supported by the drive
 
 ## Drivers
 
-The `attachie` gem ships with the following drivers:
+The `Attachie` gem ships with the following drivers:
 
 * `Attachie::FileDriver`: To store files on the local file system
 * `Attachie::FakeDriver`: To store files in memory (for testing)
 * `Attachie::S3Driver`: To store files on S3
-* `Attachie::SwiftDriver`: To store files on an Openstack Swift provider
 
-You can eg use the file system driver:
+### FileDriver
+
+To use the file driver:
 
 ```ruby
 require "attachie/file_driver"
@@ -92,6 +96,47 @@ class User
     # ...
   }
 end
+```
+
+### S3Driver
+
+To use the s3 driver:
+
+```ruby
+require "attachie/s3_driver"
+
+Attachie.default_options[:driver] = Attachie::S3Driver.new(Aws::S3::Client.new('...'))
+```
+
+### FakeDriver
+
+To use the fake driver (useful for testing):
+
+```ruby
+require "attachie/fake_driver"
+
+Attachie.default_options[:driver] = Attache::FakeDriver.new
+```
+
+Drivers and other options can be set on an attachment level as well:
+
+```ruby
+class User
+  include Attachie
+
+  attachment :avatar, driver: MyFileDriver, versions: {
+    # ...
+  }
+end
+```
+
+## Direct S3 Uploads
+
+Attachie allows to presign s3 post requests like:
+
+```ruby
+user.avatar(:icon).presign_post(content_type: 'image/jpeg', ...)
+# => {"fields"=>{"key"=>"path/to/object","x-amz-signature"=>"..."},"headers":{},"method"=>"post","url"=>"..."}
 ```
 
 ## Contributing
