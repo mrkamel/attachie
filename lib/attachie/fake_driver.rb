@@ -37,7 +37,7 @@ module Attachie
     def list(bucket, prefix: nil)
       return enum_for(:list, bucket, prefix: prefix) unless block_given?
 
-      objects(bucket).each do |key, _|
+      objects(bucket).dup.each do |key, _|
         yield key if prefix.nil? || key.start_with?(prefix)
       end
     end
