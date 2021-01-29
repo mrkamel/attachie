@@ -9,6 +9,8 @@ jobs:
     services:
       fake-s3:
         image: lphoward/fake-s3
+        ports:
+          - 4569:4569
     #env:
     #  S3_HOST: fake-s3
     steps:
