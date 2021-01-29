@@ -7,6 +7,7 @@ RSpec.describe Attachie::S3Driver do
       access_key_id: "access_key_id",
       secret_access_key: "secret_access_key",
       endpoint: "http://#{ENV["S3_HOST"] || "localhost"}:4569",
+      force_path_style: !ENV["S3_HOST"].nil?,
       region: "us-east-1"
     ))
   end
