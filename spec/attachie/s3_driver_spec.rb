@@ -7,7 +7,7 @@ RSpec.describe Attachie::S3Driver do
       access_key_id: "access_key_id",
       secret_access_key: "secret_access_key",
       endpoint: "http://#{ENV["S3_HOST"] || "localhost"}:4569",
-      force_path_style: !ENV["S3_HOST"].nil?,
+      force_path_style: true,
       region: "us-east-1"
     ))
   end
@@ -99,7 +99,7 @@ RSpec.describe Attachie::S3Driver do
         fields: hash_including("key" => "path/to/object"),
         headers: {},
         method: "post",
-        url: "http://bucket.localhost:4569"
+        url: "http://localhost:4569/bucket"
       )
     end
 
