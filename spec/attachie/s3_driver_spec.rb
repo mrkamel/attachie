@@ -6,7 +6,7 @@ RSpec.describe Attachie::S3Driver do
     Attachie::S3Driver.new(Aws::S3::Client.new(
       access_key_id: "access_key_id",
       secret_access_key: "secret_access_key",
-      endpoint: "http://#{ENV["S3_HOST"] || "localhost"}:4569",
+      endpoint: "http://localhost:4569",
       force_path_style: true,
       region: "us-east-1"
     ))
