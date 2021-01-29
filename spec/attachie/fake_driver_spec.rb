@@ -32,6 +32,21 @@ RSpec.describe Attachie::FakeDriver do
     end
   end
 
+  describe "#download" do
+    it "downloads the blob to the specified path" do
+      tempfile = Tempfile.new
+
+      begin
+        driver.store("name", "blob", "bucket")
+        driver.download("name", "bucket", tempfile.path)
+
+        expect(tempfile.read).to eq("blob")
+      ensure
+        tempfile.close(true)
+      end
+    end
+  end
+
   describe "#store_multipart" do
     it "stores a blob via multipart upload" do
       driver.store_multipart("name", "bucket") do |upload|

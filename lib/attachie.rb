@@ -59,6 +59,10 @@ module Attachie
         option(:driver).store(path, data_or_io, container, opts)
       end
 
+      def download(dest_path)
+        option(:driver).download(path, container, dest_path)
+      end
+
       def info
         option(:driver).info(path, container)
       end

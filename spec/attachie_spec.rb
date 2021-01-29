@@ -37,7 +37,7 @@ RSpec.describe TestModel do
 
   it "correctly uses the driver" do
     test_model = TestModel.new(filename: "blob.txt")
-    test_model.file(:large).store "blob"
+    test_model.file(:large).store("blob")
 
     expect(test_model.file(:large).value).to eq("blob")
   end
@@ -52,6 +52,22 @@ RSpec.describe TestModel do
     test_model.file = nil
 
     expect(test_model.updated_at).to be_nil
+  end
+
+  describe "#download" do
+    it "downloads the file to the specified path" do
+      tempfile = Tempfile.new
+
+      begin
+        test_model = TestModel.new(filename: "blob.txt")
+        test_model.file(:large).store("blob")
+        test_model.file(:large).download(tempfile.path)
+
+        expect(tempfile.read).to eq("blob")
+      ensure
+        tempfile.close(true)
+      end
+    end
   end
 
   describe "#info" do
