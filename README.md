@@ -70,6 +70,7 @@ user.avatar(:icon).delete
 user.avatar(:icon).exists?
 user.avatar(:icon).value
 user.avatar(:icon).temp_url(expires_in: 2.days) # Must be supported by the driver
+user.avator(:icon).download("/path/to/destination")
 ```
 
 ## Drivers

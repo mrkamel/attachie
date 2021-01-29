@@ -1,3 +1,9 @@
-# 1.0.1
-## Fixed
+# CHANGELOG
+
+## 1.1.0
+### Added
+* Added a download method to download files to a specific path
+
+## 1.0.1
+### Fixed
 * dup list result in FakeDriver before iterating

@@ -7,6 +7,7 @@ RSpec.describe Attachie::S3Driver do
       access_key_id: "access_key_id",
       secret_access_key: "secret_access_key",
       endpoint: "http://localhost:4569",
+      force_path_style: true,
       region: "us-east-1"
     ))
   end
@@ -36,6 +37,22 @@ RSpec.describe Attachie::S3Driver do
         expect(driver.value("name", "bucket")).to eq("blob")
       ensure
         driver.delete("name", "bucket")
+      end
+    end
+  end
+
+  describe "#download" do
+    it "downloads the blob to the specified path" do
+      tempfile = Tempfile.new
+
+      begin
+        driver.store("name", "blob", "bucket")
+        driver.download("name", "bucket", tempfile.path)
+
+        expect(tempfile.read).to eq("blob")
+      ensure
+        driver.delete("name", "bucket")
+        tempfile.close(true)
       end
     end
   end
@@ -82,7 +99,7 @@ RSpec.describe Attachie::S3Driver do
         fields: hash_including("key" => "path/to/object"),
         headers: {},
         method: "post",
-        url: "http://bucket.localhost:4569"
+        url: "http://localhost:4569/bucket"
       )
     end
 

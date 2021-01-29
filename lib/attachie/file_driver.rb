@@ -89,6 +89,10 @@ module Attachie
       File.binread path_for(name, bucket)
     end
 
+    def download(name, bucket, path)
+      FileUtils.cp(path_for(name, bucket), path)
+    end
+
     def delete(name, bucket)
       path = path_for(name, bucket)
 

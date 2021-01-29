@@ -76,6 +76,12 @@ module Attachie
       objects(bucket)[name]
     end 
 
+    def download(name, bucket, path)
+      content = value(name, bucket)
+
+      open(path, "wb") { |stream| stream.write(content) }
+    end
+
     def temp_url(name, bucket, options = {})
       "https://example.com/#{bucket}/#{name}?signature=signature&expires=expires"
     end

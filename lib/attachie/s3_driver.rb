@@ -114,6 +114,10 @@ module Attachie
       s3_resource.bucket(bucket).object(name).get.body.read.force_encoding(Encoding::BINARY)
     end
 
+    def download(name, bucket, path)
+      s3_resource.bucket(bucket).object(name).download_file(path)
+    end
+
     def delete(name, bucket)
       s3_resource.bucket(bucket).object(name).delete
     end
