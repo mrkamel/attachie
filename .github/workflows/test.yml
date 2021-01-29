@@ -25,4 +25,3 @@ jobs:
         gem install bundler
         bundle install --path=vendor/bundler
         bundle exec rspec
-        bundle exec rubocop
