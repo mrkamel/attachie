@@ -24,4 +24,5 @@ jobs:
     - run: |
         gem install bundler
         bundle install --path=vendor/bundler
+        sleep 5
         bundle exec rspec
