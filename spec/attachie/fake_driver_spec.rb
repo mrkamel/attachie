@@ -21,6 +21,14 @@ RSpec.describe Attachie::FakeDriver do
 
       expect(driver.list("bucket1", prefix: "object").to_a).to eq(["object1", "object2"])
     end
+
+    it "sorts the objects by key" do
+      driver.store("object2", "blob", "bucket")
+      driver.store("object1", "blob", "bucket")
+      driver.store("object3", "blob", "bucket")
+
+      expect(driver.list("bucket").to_a).to eq(["object1", "object2", "object3"])
+    end
   end
 
   describe "#store" do

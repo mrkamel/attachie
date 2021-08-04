@@ -32,22 +32,28 @@ module Attachie
   end
 
   class FakeDriver
+    include MonitorMixin
+
     class ItemNotFound < StandardError; end
 
     def list(bucket, prefix: nil)
       return enum_for(:list, bucket, prefix: prefix) unless block_given?
 
-      objects(bucket).dup.each do |key, _|
-        yield key if prefix.nil? || key.start_with?(prefix)
+      synchronize do
+        objects(bucket).sort { |a, b| a[0] <=> b[0] }.each do |key, _|
+          yield key if prefix.nil? || key.start_with?(prefix)
+        end
       end
     end
 
     def info(name, bucket)
-      {
-        last_modified: nil,
-        content_length: objects(bucket)[name].size,
-        content_type: MIME::Types.of(name).first&.to_s
-      }
+      synchronize do
+        {
+          last_modified: nil,
+          content_length: objects(bucket)[name].size,
+          content_type: MIME::Types.of(name).first&.to_s
+        }
+      end
     end
 
     def presigned_post(name, bucket, options = {})
@@ -55,25 +61,35 @@ module Attachie
     end
 
     def store(name, data_or_io, bucket, options = {})
-      objects(bucket)[name] = data_or_io.respond_to?(:read) ? data_or_io.read : data_or_io
+      synchronize do
+        objects(bucket)[name] = data_or_io.respond_to?(:read) ? data_or_io.read : data_or_io
+      end
     end 
 
     def store_multipart(name, bucket, options = {}, &block)
-      objects(bucket)[name] = FakeMultipartUpload.new(name, bucket, options, &block).data
+      synchronize do
+        objects(bucket)[name] = FakeMultipartUpload.new(name, bucket, options, &block).data
+      end
     end
 
     def exists?(name, bucket)
-      objects(bucket).key?(name)
+      synchronize do
+        objects(bucket).key?(name)
+      end
     end 
 
     def delete(name, bucket)
-      objects(bucket).delete(name)
+      synchronize do
+        objects(bucket).delete(name)
+      end
     end 
 
     def value(name, bucket)
-      raise(ItemNotFound) unless objects(bucket).key?(name)
+      synchronize do
+        raise(ItemNotFound) unless objects(bucket).key?(name)
 
-      objects(bucket)[name]
+        objects(bucket)[name]
+      end
     end 
 
     def download(name, bucket, path)
@@ -87,14 +103,18 @@ module Attachie
     end
 
     def flush
-      @objects = {}
+      synchronize do
+        @objects = {}
+      end
     end 
 
     private
 
     def objects(bucket)
-      @objects ||= {}
-      @objects[bucket] ||= {}
+      synchronize do
+        @objects ||= {}
+        @objects[bucket] ||= {}
+      end
     end 
   end 
 end
