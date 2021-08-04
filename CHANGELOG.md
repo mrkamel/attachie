@@ -2,8 +2,8 @@
 
 ## 1.1.2
 ### Fixed
-* Make `FakeDriver` thread safe
-* Sort items in `FakeDriver#list` by key
+* Make `FakeDriver` thread-safe
+* Sort objects in `FakeDriver#list` by key
 
 ## 1.1.1
 ### Fixed
