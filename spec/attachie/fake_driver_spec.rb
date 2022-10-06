@@ -85,12 +85,16 @@ RSpec.describe Attachie::FakeDriver do
 
   describe "#info" do
     it "returns info about the object" do
-      driver.store("name.txt", "blob", "bucket")
+      timestamp = Time.now.utc
+
+      Timecop.freeze timestamp do
+        driver.store("name.txt", "blob", "bucket")
+      end
 
       expect(driver.info("name.txt", "bucket")).to eq(
         content_length: 4,
         content_type: "text/plain",
-        last_modified: nil
+        last_modified: timestamp
       )
     end
   end
