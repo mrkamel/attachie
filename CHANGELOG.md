@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.0
+### Added
+* Return proper `last_modified` in `FakeDriver#info`
+
 ## 1.1.2
 ### Fixed
 * Make `FakeDriver` thread-safe

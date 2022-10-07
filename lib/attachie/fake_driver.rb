@@ -49,8 +49,8 @@ module Attachie
     def info(name, bucket)
       synchronize do
         {
-          last_modified: nil,
-          content_length: objects(bucket)[name].size,
+          last_modified: objects(bucket)[name][:last_modified],
+          content_length: objects(bucket)[name][:data].size,
           content_type: MIME::Types.of(name).first&.to_s
         }
       end
@@ -62,13 +62,13 @@ module Attachie
 
     def store(name, data_or_io, bucket, options = {})
       synchronize do
-        objects(bucket)[name] = data_or_io.respond_to?(:read) ? data_or_io.read : data_or_io
+        objects(bucket)[name] = { data: data_or_io.respond_to?(:read) ? data_or_io.read : data_or_io, last_modified: Time.now.utc }
       end
     end 
 
     def store_multipart(name, bucket, options = {}, &block)
       synchronize do
-        objects(bucket)[name] = FakeMultipartUpload.new(name, bucket, options, &block).data
+        objects(bucket)[name] = { data: FakeMultipartUpload.new(name, bucket, options, &block).data, last_modified: Time.now.utc }
       end
     end
 
@@ -86,9 +86,9 @@ module Attachie
 
     def value(name, bucket)
       synchronize do
-        raise(ItemNotFound) unless objects(bucket).key?(name)
+        raise(ItemNotFound, "Object #{ name } does not exist in bucket #{ bucket }") unless objects(bucket).key?(name)
 
-        objects(bucket)[name]
+        objects(bucket)[name][:data]
       end
     end 
 

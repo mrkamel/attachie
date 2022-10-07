@@ -4,6 +4,7 @@ require File.expand_path("../../lib/attachie", __FILE__)
 require "attachie/file_driver"
 require "attachie/fake_driver"
 require "attachie/s3_driver"
+require "timecop"
 
 class Product
   include Attachie
