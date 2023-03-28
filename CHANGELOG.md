@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.1
+### Fixed
+* Fix regarding `File.exists?` being no longer available in ruby 3.2
+
 ## 1.2.0
 ### Added
 * Return proper `last_modified` in `FakeDriver#info`
