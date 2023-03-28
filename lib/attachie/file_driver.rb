@@ -118,7 +118,7 @@ module Attachie
     end
 
     def exists?(name, bucket)
-      File.exists? path_for(name, bucket)
+      File.exist? path_for(name, bucket)
     end
 
     def path_for(name, bucket)
