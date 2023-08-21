@@ -34,8 +34,6 @@ module Attachie
   class FakeDriver
     include MonitorMixin
 
-    class ItemNotFound < StandardError; end
-
     def list(bucket, prefix: nil)
       return enum_for(:list, bucket, prefix: prefix) unless block_given?
 
@@ -48,6 +46,8 @@ module Attachie
 
     def info(name, bucket)
       synchronize do
+        raise(ItemNotFound, "Object #{ name } does not exist in bucket #{ bucket }") unless objects(bucket).key?(name)
+
         {
           last_modified: objects(bucket)[name][:last_modified],
           content_length: objects(bucket)[name][:data].size,
@@ -82,6 +82,8 @@ module Attachie
       synchronize do
         objects(bucket).delete(name)
       end
+
+      true
     end 
 
     def value(name, bucket)

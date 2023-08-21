@@ -84,6 +84,8 @@ module Attachie
         last_modified: object.last_modified,
         content_type: object.content_type
       }
+    rescue Aws::S3::Errors::NotFound => e
+      raise ItemNotFound, e.message
     end
 
     def store(name, data_or_io, bucket, options = {})
@@ -112,14 +114,20 @@ module Attachie
 
     def value(name, bucket)
       s3_resource.bucket(bucket).object(name).get.body.read.force_encoding(Encoding::BINARY)
+    rescue Aws::S3::Errors::NotFound => e
+      raise ItemNotFound, e.message
     end
 
     def download(name, bucket, path)
       s3_resource.bucket(bucket).object(name).download_file(path)
+    rescue Aws::S3::Errors::NotFound => e
+      raise ItemNotFound, e.message
     end
 
     def delete(name, bucket)
       s3_resource.bucket(bucket).object(name).delete
+
+      true
     end
 
     def exists?(name, bucket)

@@ -4,10 +4,12 @@ require "attachie/interpolation"
 require "active_support/all"
 
 module Attachie
-  class UnknownAttachment < StandardError; end
-  class NoSuchVersion < StandardError; end
-  class InterpolationError < StandardError; end
-  class NotSupported < StandardError; end
+  class BaseError < StandardError; end
+  class UnknownAttachment < BaseError; end
+  class NoSuchVersion < BaseError; end
+  class InterpolationError < BaseError; end
+  class NotSupported < BaseError; end
+  class ItemNotFound < BaseError; end
 
   def self.default_options
     @default_options ||= { :protocol => "http" }
