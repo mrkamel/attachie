@@ -75,6 +75,8 @@ module Attachie
         content_type: MIME::Types.of(name).first&.to_s,
         content_length: File.size(path_for(name, bucket))
       }
+    rescue Errno::ENOENT => e
+      raise ItemNotFound, e.message
     end
 
     def store_multipart(name, bucket, options = {}, &block)
@@ -87,6 +89,8 @@ module Attachie
 
     def value(name, bucket)
       File.binread path_for(name, bucket)
+    rescue Errno::ENOENT => e
+      raise ItemNotFound, e.message
     end
 
     def download(name, bucket, dest_path)
@@ -95,6 +99,8 @@ module Attachie
       FileUtils.mkdir_p File.dirname(path)
 
       FileUtils.cp(path, dest_path)
+    rescue Errno::ENOENT => e
+      raise ItemNotFound, e.message
     end
 
     def delete(name, bucket)

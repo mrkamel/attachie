@@ -53,6 +53,16 @@ RSpec.describe Attachie::FakeDriver do
         tempfile.close(true)
       end
     end
+
+    it "raises an Attachie::ItemNotFound when the object does not exist" do
+      tempfile = Tempfile.new
+
+      begin
+        expect { driver.download("unknown", "bucket", tempfile.path) }.to raise_error(Attachie::ItemNotFound)
+      ensure
+        tempfile.close(true)
+      end
+    end
   end
 
   describe "#store_multipart" do
@@ -75,6 +85,10 @@ RSpec.describe Attachie::FakeDriver do
       driver.delete("name", "bucket")
       expect(driver.exists?("name", "bucket")).to be(false)
     end
+
+    it "returns true even when the object does not exist" do
+      expect(driver.delete("unknown", "bucket")).to eq(true)
+    end
   end
 
   describe "#temp_url" do
@@ -96,6 +110,10 @@ RSpec.describe Attachie::FakeDriver do
         content_type: "text/plain",
         last_modified: timestamp
       )
+    end
+
+    it "raises an Attachie::ItemNotFound when the object does not exist" do
+      expect { driver.info("unknown", "bucket") }.to raise_error(Attachie::ItemNotFound)
     end
   end
 end

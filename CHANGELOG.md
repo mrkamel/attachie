@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.0.0
+## BREAKING
+* Wrap `Aws::S3::Errors::NotFound` from `Attachie::S3Driver` and
+ `Errno::ENOENT` from `Attachie::FileDriver` in `Attachie::ItemNotFound`
+* Change `Attachie::FakeDriver::ItemNotFound` to `Attachie::ItemNotFound`
+* Make `#delete` always return `true` for all drivers
+
 ## 1.2.1
 ### Fixed
 * Fix regarding `File.exists?` being no longer available in ruby 3.2

@@ -37,6 +37,16 @@ RSpec.describe Attachie::FileDriver do
         tempfile.close(true)
       end
     end
+
+    it "raises an Attachie::ItemNotFound when the object does not exist" do
+      tempfile = Tempfile.new
+
+      begin
+        expect { driver.download("unknown", "bucket", tempfile.path) }.to raise_error(Attachie::ItemNotFound)
+      ensure
+        tempfile.close(true)
+      end
+    end
   end
 
   describe" #store_multipart" do
@@ -67,6 +77,10 @@ RSpec.describe Attachie::FileDriver do
         driver.delete("name", "bucket")
       end
     end
+
+    it "returns true even when the object does not exist" do
+      expect(driver.delete("unknown", "bucket")).to eq(true)
+    end
   end
 
   describe "#info" do
@@ -82,6 +96,10 @@ RSpec.describe Attachie::FileDriver do
       ensure
         driver.delete("name.txt", "bucket")
       end
+    end
+
+    it "raises an Attachie::ItemNotFound when the object does not exist" do
+      expect { driver.info("unknown", "bucket") }.to raise_error(Attachie::ItemNotFound)
     end
   end
 end
