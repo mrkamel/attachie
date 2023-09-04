@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["vetter@plainpicture.de"]
   spec.summary       = %q{Declarative and flexible attachments}
   spec.description   = %q{Declarative and flexible attachments}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/mrkamel/attachie"
   spec.license       = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage
