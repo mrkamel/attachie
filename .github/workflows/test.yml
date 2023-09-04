@@ -11,17 +11,20 @@ jobs:
         image: lphoward/fake-s3
         ports:
           - 4569:4569
+    env:  
+      BUNDLE_PATH: vendor/bundler
     steps:
-    - uses: actions/checkout@v1
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-    - uses: actions/cache@v1
-      id: cache
-      with:
-        path: vendor/bundler
-        key: ${{ hashFiles('Gemfile.lock') }}-${{ matrix.ruby }}
-    - run: |
-        gem install bundler
-        bundle install --path=vendor/bundler
-        bundle exec rspec
+      - uses: actions/checkout@v1
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - uses: actions/cache@v1
+        id: cache
+        with:
+          path: vendor/bundler
+          key: ${{ hashFiles('Gemfile.lock') }}-${{ matrix.ruby }}
+      - run: |
+          gem install bundler
+          bundle install
+          bundle exec rspec
+
